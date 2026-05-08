@@ -1,75 +1,78 @@
-# React + TypeScript + Vite
+# 🔮 MTG Explorer: Estudo de CI/CD & AWS CloudFront
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto é uma aplicação React desenvolvida com **Vite** e **TypeScript** que consome a [API do Magic: The Gathering](https://docs.magicthegathering.io/) para listar e buscar cartas.
 
-Currently, two official plugins are available:
+**O objetivo principal deste repositório é o estudo prático de pipelines de CI/CD e deployment automatizado na AWS utilizando S3 e CloudFront.**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🛠️ Tecnologias e Ferramentas
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Frontend
 
-Note: This will impact Vite dev & build performances.
+- **React 19 + Vite**: Para uma interface rápida e reativa.
+- **TypeScript**: Garantia de tipos e melhor experiência de desenvolvimento.
+- **Vitest**: Suite de testes moderna.
 
-## Expanding the ESLint configuration
+### DevOps & Cloud (Foco do Projeto)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **GitHub Actions**: Responsável pela Integração Contínua (CI).
+- **AWS CodeBuild**: Responsável pela Entrega/Implantação Contínua (CD).
+- **Amazon S3**: Hospedagem dos arquivos estáticos da aplicação.
+- **Amazon CloudFront**: CDN para distribuição global com baixa latência e HTTPS.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## ⚙️ Arquitetura da Pipeline
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+A pipeline foi desenhada para separar as responsabilidades de validação e implantação:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 1. CI (Integração Contínua) - **GitHub Actions**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Toda vez que um código é enviado para a branch `main` ou um Pull Request é aberto, o GitHub Actions executa:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- 🧹 **Linting**: Validação de padrões de código com ESLint.
+- 🧪 **Typecheck**: Verificação de tipos com TypeScript.
+- 🃏 **Unit Tests**: Execução de testes automatizados com Vitest.
+
+### 2. CD (Implantação Contínua) - **AWS CodeBuild**
+
+Após a validação no GitHub Actions (ou disparado via webhook), o AWS CodeBuild entra em cena para:
+
+- 📦 **Build**: Compilação e minificação do código para produção.
+- 🚀 **Deploy**: Sincronização automática dos arquivos gerados com o bucket **S3**.
+- 🧹 **Invalidation**: Invalidação do cache do **CloudFront** para garantir que a versão mais nova esteja disponível instantaneamente para os usuários.
+
+---
+
+## 🚀 Como Rodar Localmente
+
+1. **Clone o repositório:**
+
+   ```bash
+   git clone https://github.com/seu-usuario/mtg-explorer.git
+   ```
+
+2. **Instale as dependências:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Inicie o desenvolvimento:**
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Execute os testes:**
+   ```bash
+   npm run test
+   ```
+
+---
+
+## 🌐 Aplicação em Produção
+
+A aplicação é distribuída globalmente via AWS CloudFront e pode ser acessada em:
+👉 [https://d2luqe2mp1p7xn.cloudfront.net/](https://d2luqe2mp1p7xn.cloudfront.net/)
