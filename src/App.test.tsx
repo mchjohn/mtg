@@ -32,13 +32,17 @@ describe('App Component', () => {
     vi.restoreAllMocks();
   });
 
-  it('should render the title and the search input', () => {
+  it('should render the title and the search input', async () => {
     (fetch as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ cards: [] }),
     });
 
     render(<App />);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Carregando cartas...')).not.toBeInTheDocument();
+    });
 
     expect(screen.getByText('Buscador de Cartas')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Ex.: Black Lotus, Lightning Bolt, Serra Angel')).toBeInTheDocument();
