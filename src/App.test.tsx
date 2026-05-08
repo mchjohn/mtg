@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
+import { vi, type Mock } from 'vitest';
 import App from './App';
 
 const mockCards = [
@@ -32,8 +32,8 @@ describe('App Component', () => {
     vi.restoreAllMocks();
   });
 
-  it('deve renderizar o título e o campo de busca', () => {
-    (fetch as any).mockResolvedValueOnce({
+  it('should render the title and the search input', () => {
+    (fetch as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ cards: [] }),
     });
@@ -44,8 +44,8 @@ describe('App Component', () => {
     expect(screen.getByPlaceholderText('Ex.: Black Lotus, Lightning Bolt, Serra Angel')).toBeInTheDocument();
   });
 
-  it('deve carregar e exibir cartas na inicialização', async () => {
-    (fetch as any).mockResolvedValueOnce({
+  it('should load and display cards on mount', async () => {
+    (fetch as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ cards: mockCards }),
     });
@@ -64,13 +64,13 @@ describe('App Component', () => {
     expect(images[0]).toHaveAttribute('src', mockCards[0].imageUrl);
   });
 
-  it('deve filtrar cartas que não possuem imagem', async () => {
+  it('should filter out cards that do not have an image', async () => {
     const cardsWithOneMissingImage = [
       ...mockCards,
       { id: '3', name: 'Invisible Stalker', imageUrl: undefined }
     ];
 
-    (fetch as any).mockResolvedValueOnce({
+    (fetch as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ cards: cardsWithOneMissingImage }),
     });
@@ -85,15 +85,15 @@ describe('App Component', () => {
     expect(screen.getByText(/mostrando 2 com imagem/)).toBeInTheDocument();
   });
 
-  it('deve realizar uma busca quando o formulário é enviado', async () => {
-    (fetch as any).mockResolvedValue({
+  it('should perform a search when the form is submitted', async () => {
+    (fetch as Mock).mockResolvedValue({
       ok: true,
       json: async () => ({ cards: [] }),
     });
 
     render(<App />);
 
-    // Espera o carregamento inicial
+    // Wait for the initial load
     await waitFor(() => {
       expect(screen.queryByText('Carregando cartas...')).not.toBeInTheDocument();
     });
@@ -109,8 +109,8 @@ describe('App Component', () => {
     });
   });
 
-  it('deve exibir mensagem de erro quando a API falha', async () => {
-    (fetch as any).mockResolvedValueOnce({
+  it('should display an error message when the API fails', async () => {
+    (fetch as Mock).mockResolvedValueOnce({
       ok: false,
       status: 500,
     });
@@ -122,8 +122,8 @@ describe('App Component', () => {
     });
   });
 
-  it('deve exibir mensagem quando nenhuma carta é encontrada', async () => {
-    (fetch as any).mockResolvedValueOnce({
+  it('should display a message when no cards are found', async () => {
+    (fetch as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ cards: [] }),
     });
