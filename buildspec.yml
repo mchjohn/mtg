@@ -1,0 +1,33 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 24
+    commands:
+      - echo "Instalando dependências..."
+      - npm pkg delete scripts.prepare
+      - npm ci
+    pre_build:
+      commands:
+        - echo "Rodando verificações de qualidade..."
+        - npm run lint:ci
+        - npm run typecheck
+        - echo "Rodando testes..."
+        - npm run test:ci
+  build:
+    commands:
+      - echo "Iniciando o build da aplicação..."
+      - npm run build
+  post_build:
+    commands:
+      - echo "Build finalizado com sucesso em $(date)"
+
+artifacts:
+  files:
+    - "**/*"
+  base-directory: dist
+
+cache:
+  paths:
+    - "node_modules/**/*"
