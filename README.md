@@ -76,4 +76,3 @@ Após a validação no GitHub Actions (ou disparado via webhook), o AWS CodeBuil
 
 A aplicação é distribuída globalmente via AWS CloudFront e pode ser acessada em:
 👉 [https://d2luqe2mp1p7xn.cloudfront.net/](https://d2luqe2mp1p7xn.cloudfront.net/)
- 
